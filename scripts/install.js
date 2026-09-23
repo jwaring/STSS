@@ -1,4 +1,4 @@
-  var fs = require('fs'), path = require('path');
+  var fs = require('fs'), path = require('path'), chalk = require('chalk');
 
 function install(root) {
     var appDir = path.join(root, 'app'),
