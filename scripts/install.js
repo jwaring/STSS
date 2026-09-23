@@ -1,4 +1,15 @@
-  var fs = require('fs'), path = require('path'), chalk = require('chalk');
+  var fs = require('fs'), path = require('path');
+
+  // npm's git-dependency "prepare" step doesn't reliably finish installing this package's own
+  // dependencies before running postinstall (this script) - degrade to plain text rather than
+  // crash the whole install if chalk isn't resolvable yet.
+  var chalk;
+  try {
+      chalk = require('chalk');
+  } catch (e) {
+      var identity = function (s) { return s; };
+      chalk = {blue: identity, red: {bold: identity}};
+  }
 
 function install(root) {
     var appDir = path.join(root, 'app'),
@@ -41,7 +52,7 @@ function install(root) {
             }
         }
     } else {
-        console.log('ERROR: Could not find the "app"-folder in working directory ('+root+').\n') + chalk.red.bold('The pre-compile-hook was not installed!');
+        console.log('ERROR: Could not find the "app"-folder in working directory ('+root+').\n' + chalk.red.bold('The pre-compile-hook was not installed!'));
     }
 }
 
